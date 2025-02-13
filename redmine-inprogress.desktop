@@ -1,0 +1,8 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Redmine In Progress Issues
+Exec=xdg-open "https://tinyurl.com/mt77ztkp"
+Icon=/home/sibin/.local/share/applications/redmine/progress.png
+Terminal=false
+Categories=Network;

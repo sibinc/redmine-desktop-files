@@ -1,0 +1,8 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Redmine Open Issues
+Exec=xdg-open "https://tinyurl.com/36cexs5n"
+Icon=/home/sibin/.local/share/applications/redmine/open.png
+Terminal=false
+Categories=Network;

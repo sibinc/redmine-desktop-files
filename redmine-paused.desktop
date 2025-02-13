@@ -1,0 +1,8 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Redmine Paused Issues
+Exec=xdg-open "https://tinyurl.com/u2synywe"
+Icon=/home/sibin/.local/share/applications/redmine/paused.png
+Terminal=false
+Categories=Network;
