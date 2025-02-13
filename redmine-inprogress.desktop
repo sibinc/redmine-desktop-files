@@ -3,6 +3,6 @@ Version=1.0
 Type=Application
 Name=Redmine In Progress Issues
 Exec=xdg-open "https://tinyurl.com/mt77ztkp"
-Icon=/home/sibin/.local/share/applications/redmine/progress.png
+Icon=$HOME/.local/share/applications/redmine-desktop/progress.png
 Terminal=false
 Categories=Network;
