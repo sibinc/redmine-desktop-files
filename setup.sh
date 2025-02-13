@@ -1,10 +1,10 @@
 #!/bin/bash
 
 # Target directory
-TARGET_DIR="$HOME/.local/share/applications"
+TARGET_DIR="$HOME/.local/share/applications-test"
 
 # GitHub raw file URLs
-GITHUB_REPO="https://raw.githubusercontent.com/yourusername/redmine-desktop-files/main"
+GITHUB_REPO="https://raw.githubusercontent.com/sibinc/redmine-desktop-files/main"
 FILES=(
   "$GITHUB_REPO/redmine-inprogress.desktop"
   "$GITHUB_REPO/redmine-open.desktop"
