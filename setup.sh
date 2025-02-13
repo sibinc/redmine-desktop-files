@@ -1,87 +1,89 @@
 #!/bin/bash
 
-# Define text colors
+# 🎨 Colors
 GREEN="\e[32m"
 YELLOW="\e[33m"
 RED="\e[31m"
 BLUE="\e[34m"
-BOLD="\e[1m"
 RESET="\e[0m"
 
-# Define target directories
+# 📂 Directories
 APPLICATIONS_DIR="$HOME/.local/share/applications"
 ICON_DIR="$HOME/.local/share/icons/redmine-desktop"
 
-# GitHub raw file URLs
+# 🔗 GitHub Repo (Update this with your actual GitHub username and repo)
 GITHUB_REPO="https://raw.githubusercontent.com/sibinc/redmine-desktop-files/main"
 
-# Map .desktop files to correct icon names
-declare -A ICON_MAPPING=(
-  ["redmine-inprogress.desktop"]="progress.png"
-  ["redmine-open.desktop"]="open.png"
-  ["redmine-paused.desktop"]="paused.png"
+# 📄 Desktop Files
+FILES=(
+  "redmine-inprogress.desktop"
+  "redmine-open.desktop"
+  "redmine-paused.desktop"
 )
 
-# Function to show progress animation
-show_progress() {
-  local -a frames=("|" "/" "-" "\\")
-  for frame in "${frames[@]}"; do
-    echo -ne "\r${YELLOW}Processing... $frame${RESET}"
-    sleep 0.1
-  done
-}
+# 🖼️ Icon Files
+ICONS=(
+  "progress.png"
+  "open.png"
+  "paused.png"
+)
 
-# Display welcome message
-echo -e "${BLUE}${BOLD}Welcome to the Redmine Desktop Files Installer!${RESET}"
-echo -e "${YELLOW}This script will install Redmine shortcuts and icons on your system.${RESET}\n"
-sleep 1
+echo -e "${YELLOW}🚀 Starting installation...${RESET}"
 
-# Step 1: Create necessary directories
-echo -e "${GREEN}Step 1:${RESET} Creating necessary directories..."
+# 🔹 Create directories if they don’t exist
+echo -e "${BLUE}📂 Ensuring required directories exist...${RESET}"
 mkdir -p "$APPLICATIONS_DIR"
 mkdir -p "$ICON_DIR"
-echo -e "${GREEN}✔ Directories created successfully!${RESET}\n"
-sleep 1
 
-# Step 2: Download and install .desktop files
-echo -e "${GREEN}Step 2:${RESET} Downloading and installing Redmine shortcuts..."
-for FILE in "${!ICON_MAPPING[@]}"; do
-  show_progress
-  echo -e "\n${YELLOW}Downloading $FILE...${RESET}"
-  curl -o "$APPLICATIONS_DIR/$FILE" -L "$GITHUB_REPO/$FILE" || { echo -e "${RED}✘ Failed to download $FILE${RESET}"; exit 1; }
+# Function to download a file and retry if empty
+download_file() {
+  local url="$1"
+  local dest="$2"
+  local file_name=$(basename "$dest")
 
-  # Get corresponding icon file
-  ICON_NAME="${ICON_MAPPING[$FILE]}"
-  ICON_PATH="$ICON_DIR/$ICON_NAME"
+  echo -e "📥 Downloading ${YELLOW}$file_name${RESET}..."
+  curl -s -o "$dest" -L "$url"
 
-  # Update the Icon= path inside the .desktop file
-  sed -i "s|^Icon=.*|Icon=$ICON_PATH|" "$APPLICATIONS_DIR/$FILE"
+  # Check if file is empty
+  if [[ ! -s "$dest" ]]; then
+    echo -e "⚠️ ${RED}Warning: $file_name seems empty. Retrying...${RESET}"
+    curl -s -o "$dest" -L "$url"
 
-  echo -e "${GREEN}✔ $FILE installed successfully!${RESET}"
-done
-sleep 1
+    # If still empty, show an error and exit
+    if [[ ! -s "$dest" ]]; then
+      echo -e "❌ ${RED}Failed to download $file_name properly. Check the URL.${RESET}"
+      exit 1
+    fi
+  fi
 
-# Step 3: Download and install icons
-echo -e "\n${GREEN}Step 3:${RESET} Downloading icons..."
-for ICON in "${ICON_MAPPING[@]}"; do
-  show_progress
-  echo -e "\n${YELLOW}Downloading $ICON...${RESET}"
-  curl -o "$ICON_DIR/$ICON" -L "$GITHUB_REPO/icons/$ICON" || { echo -e "${RED}✘ Failed to download $ICON${RESET}"; exit 1; }
-  echo -e "${GREEN}✔ $ICON installed successfully!${RESET}"
-done
-sleep 1
+  echo -e "✅ ${GREEN}$file_name downloaded successfully!${RESET}"
+}
 
-# Step 4: Making .desktop files executable
-echo -e "\n${GREEN}Step 4:${RESET} Setting up permissions..."
-for FILE in "${!ICON_MAPPING[@]}"; do
+# 🔽 Download Desktop Files
+echo -e "${BLUE}💾 Downloading .desktop files...${RESET}"
+for FILE in "${FILES[@]}"; do
+  download_file "$GITHUB_REPO/$FILE" "$APPLICATIONS_DIR/$FILE"
   chmod +x "$APPLICATIONS_DIR/$FILE"
-  echo -e "${GREEN}✔ $FILE is now executable!${RESET}"
 done
-sleep 1
 
-# Final success message
-echo -e "\n${BLUE}${BOLD}🎉 Installation complete!${RESET}"
-echo -e "${GREEN}✔ Redmine shortcuts are now available in your applications menu.${RESET}"
-echo -e "${YELLOW}You can find the icons in: $ICON_DIR${RESET}"
-echo -e "${YELLOW}You can find the desktop files in: $APPLICATIONS_DIR${RESET}\n"
-echo -e "${BOLD}Enjoy your Redmine shortcuts! 🚀${RESET}"
+# 🔽 Download Icon Files
+echo -e "${BLUE}🖼️ Downloading icons...${RESET}"
+for ICON in "${ICONS[@]}"; do
+  download_file "$GITHUB_REPO/icons/$ICON" "$ICON_DIR/$ICON"
+done
+
+# 🔄 Update `Icon=` paths inside .desktop files
+echo -e "${BLUE}🛠️ Updating .desktop files with correct icon paths...${RESET}"
+for i in "${!FILES[@]}"; do
+  FILE="$APPLICATIONS_DIR/${FILES[i]}"
+  ICON_PATH="$ICON_DIR/${ICONS[i]}"
+
+  if [ -f "$FILE" ]; then
+    sed -i "s|^Icon=.*|Icon=$ICON_PATH|" "$FILE"
+    echo -e "🔧 Updated icon path in ${YELLOW}${FILES[i]}${RESET}"
+  else
+    echo -e "⚠️ ${RED}${FILES[i]} not found. Skipping icon update.${RESET}"
+  fi
+done
+
+echo -e "${GREEN}🎉 Installation complete! You can now use the Redmine shortcuts.${RESET}"
