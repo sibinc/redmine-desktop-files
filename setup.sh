@@ -12,7 +12,7 @@ APPLICATIONS_DIR="$HOME/.local/share/applications"
 ICON_DIR="$HOME/.local/share/icons/redmine-desktop"
 
 # 📂 GitHub Repo (Replace with your actual GitHub repo URL)
-GITHUB_REPO="https://raw.githubusercontent.com/yourusername/redmine-desktop-files/main"
+GITHUB_REPO="https://raw.githubusercontent.com/sibinc/redmine-desktop-files/main"
 
 # 📄 Desktop Files
 FILES=(
