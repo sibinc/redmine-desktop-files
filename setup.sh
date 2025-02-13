@@ -8,8 +8,7 @@ ICON_DIR="$HOME/.local/share/icons/redmine-desktop"
 GITHUB_REPO="https://raw.githubusercontent.com/sibinc/redmine-desktop-files/main"
 
 # Map .desktop files to correct icon names
-declare -A ICON_MAPPING
-ICON_MAPPING=(
+declare -A ICON_MAPPING=(
   ["redmine-inprogress.desktop"]="progress.png"
   ["redmine-open.desktop"]="open.png"
   ["redmine-paused.desktop"]="paused.png"
@@ -40,5 +39,4 @@ for ICON in "${ICON_MAPPING[@]}"; do
   echo "Downloading $ICON..."
   curl -o "$ICON_DIR/$ICON" -L "$GITHUB_REPO/icons/$ICON" || { echo "Failed to download $ICON"; exit 1; }
 done
-
-echo "Installation complete
+echo "Installation complete. Desktop files are in $APPLICATIONS_DIR, and icons are in $ICON_DIR."
