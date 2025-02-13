@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # Define target directories
-APPLICATIONS_DIR="$HOME/.local/share/applications"
-ICON_DIR="$APPLICATIONS_DIR/redmine-desktop"
+APPLICATIONS_DIR="$HOME/.local/share/applications-test"
+ICON_DIR="$HOME/.local/share/icons/redmine-desktop"
 
 # GitHub raw file URLs
 GITHUB_REPO="https://raw.githubusercontent.com/sibinc/redmine-desktop-files/main"
@@ -14,7 +14,7 @@ DESKTOP_FILES=(
   "redmine-paused.desktop"
 )
 
-# List of icons (update this if you add more icons)
+# List of icons
 ICONS=(
   "progress.png"
   "open.png"
@@ -25,11 +25,15 @@ ICONS=(
 mkdir -p "$APPLICATIONS_DIR"
 mkdir -p "$ICON_DIR"
 
-# Download .desktop files
+# Download and update .desktop files
 for FILE in "${DESKTOP_FILES[@]}"; do
   echo "Downloading $FILE..."
   curl -o "$APPLICATIONS_DIR/$FILE" -L "$GITHUB_REPO/$FILE" || { echo "Failed to download $FILE"; exit 1; }
-  
+
+  # Update the Icon= path inside the .desktop file
+  ICON_NAME="${FILE%.desktop}.png"
+  sed -i "s|^Icon=.*|Icon=$ICON_DIR/$ICON_NAME|" "$APPLICATIONS_DIR/$FILE"
+
   echo "Making $FILE executable..."
   chmod +x "$APPLICATIONS_DIR/$FILE"
 done

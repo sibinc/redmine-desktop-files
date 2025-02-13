@@ -3,6 +3,6 @@ Version=1.0
 Type=Application
 Name=Redmine Paused Issues
 Exec=xdg-open "https://tinyurl.com/u2synywe"
-Icon=$HOME/.local/share/applications/redmine-desktop/paused.png
+Icon=/usr/share/icons/redmine-desktop/paused.png
 Terminal=false
 Categories=Network;
